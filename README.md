@@ -15,9 +15,9 @@ Input data is following a structure that contains a list of traditional weather 
 
 A path is then constructed as follows:
 ```
-<model_name>/<model_config>/<bbox>/<resolution>/<analysis_time>/<data_kind>
+<model_name>/<model_config>/<bbox>/<resolution>/<analysis_time>/<data_kind>.zarr
 ```
-`<model_name>` is a string that contains the name of the model, e.g. `HARMONIE_CY46`, `IFS_CY50`, etc.
+`<model_name>` is a string that contains the name of the model, e.g. `harmonie_cy46`, `ifs_cy50`, etc.
 
 `<bbox>` is a string that contains the coordinates of the bounding box in the format `w<lon_min>_s<lat_min>_e<lon_max>_n<lat_max>`.
 
