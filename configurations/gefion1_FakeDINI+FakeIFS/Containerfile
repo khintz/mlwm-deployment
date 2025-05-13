@@ -1,1 +1,14 @@
 FROM pytorchlightning/pytorch_lightning:base-cuda-py3.12-torch2.6-cuda12.4.1
+
+# Define input arguments
+ARG REPO_URL=https://github.com/joeloskarsson/neural-lam-dev.git
+ARG COMMIT_SHA=aab339f
+
+# Optionally promote to ENV if you want it available in the container at runtime
+ENV REPO_URL=${REPO_URL}
+ENV COMMIT_SHA=${COMMIT_SHA}
+
+# Clone the repo using ARGs
+RUN git clone ${REPO_URL} /workspace/neural-lam-dev && \
+    cd /workspace/neural-lam-dev && \
+    git checkout ${COMMIT_SHA}

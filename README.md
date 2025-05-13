@@ -22,3 +22,6 @@ A path is then constructed as follows:
 `<bbox>` is a string that contains the coordinates of the bounding box in the format `w<lon_min>_s<lat_min>_e<lon_max>_n<lat_max>`.
 
 `<resolution>` is a string that contains the resolution of the model in the format `dx<lon_resolution><unit>_dy<lat_resolution><unit>`.
+
+## Building inference images
+Inference are build during the GitHub Actions workflow. The workflow is triggered on every push to the `main` branch. The workflow builds the inference images and pushes them to the ghcr.io registry.
