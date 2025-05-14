@@ -1,0 +1,7 @@
+[project]
+name = "FakeDini-FakeIFS-mllam"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+  "neural-lam @ git+https://github.com/joeloskarsson/neural-lam-dev.git@aab339f"
+]

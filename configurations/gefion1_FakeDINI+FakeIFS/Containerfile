@@ -1,0 +1,51 @@
+FROM pytorchlightning/pytorch_lightning:base-cuda-py3.12-torch2.6-cuda12.4.1
+
+WORKDIR /workspace
+
+COPY pyproject.toml .
+COPY *.yaml ./
+
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+ENV PATH="/root/.local/bin:$PATH"
+
+RUN uv sync
+
+#RUN uv run python -m neural_lam
+
+# Define input arguments
+#ARG MDP_REPO_URL=https://github.com/mllam/mllam-data-prep.git
+#ARG MDP_COMMIT_SHA=ce95c76
+#
+#ARG NEURAL_LAM_REPO_URL=https://github.com/joeloskarsson/neural-lam-dev.git
+#ARG NEURAL_LAM_COMMIT_SHA=aab339f
+#
+## Optionally promote to ENV if you want it available in the container at runtime
+#ENV MDP_REPO_URL=${MDP_REPO_URL}
+#ENV MDP_COMMIT_SHA=${MDP_COMMIT_SHA}
+#
+#ENV NEURAL_LAM_REPO_URL=${NEURAL_LAM_REPO_URL}
+#ENV NEURAL_LAM_COMMIT_SHA=${NEURAL_LAM_COMMIT_SHA}
+
+# Clone the repos using ARGs
+
+#RUN git clone ${MDP_REPO_URL} /workspace/mllam-data-prep && \
+#    cd /workspace/mllam-data-prep && \
+#    git checkout ${MDP_COMMIT_SHA}
+
+#RUN git clone ${NEURAL_LAM_REPO_URL} /workspace/neural-lam-dev && \
+#    cd /workspace/neural-lam-dev && \
+#    git checkout ${NEURAL_LAM_COMMIT_SHA}
+#
+## Manually bootstrap pip if venv fails
+#RUN python -m venv /opt/venv --without-pip && \
+#    curl -sS https://bootstrap.pypa.io/get-pip.py | /opt/venv/bin/python
+#
+# Make venv active
+#ENV PATH="/opt/venv/bin:$PATH"
+#
+#RUN pip install /workspace/mllam-data-prep
+#
+#RUN pip install /workspace/neural-lam-dev
+#
