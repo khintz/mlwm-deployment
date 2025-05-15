@@ -11,7 +11,10 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        config:
+          - gefion1_FakeDINI+FakeIFS+FakeDINI
     permissions:
       contents: read
       packages: write
@@ -21,6 +24,19 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Fetch inference artifact from AWS S3
+        uses: keithweaver/aws-s3-github-action@v1.0.0
+        with:
+          command: 'cp'
+          #source: 's3://my-bucket/path/${{ matrix.config }}/inference_artifact.zip'
+          source: 's3://mlwm-artifacts/inference-artifacts/${{ matrix.config }}.zip'
+          destination: 'configurations/${{ matrix.config }}/inference_artifact.zip'
+          # Ensure that AWS_SECRET_ACCESS_KEY is set in the repository or organization secrets:
+          # GitHub UI: Settings > Secrets and variables > Actions > New repository secret
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: 'us-west-2'
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
