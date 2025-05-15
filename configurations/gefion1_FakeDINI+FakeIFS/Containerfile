@@ -1,14 +1,18 @@
 FROM pytorchlightning/pytorch_lightning:base-cuda-py3.12-torch2.6-cuda12.4.1
 
-# Define input arguments
-ARG REPO_URL=https://github.com/joeloskarsson/neural-lam-dev.git
-ARG COMMIT_SHA=aab339f
+WORKDIR /workspace
 
-# Optionally promote to ENV if you want it available in the container at runtime
-ENV REPO_URL=${REPO_URL}
-ENV COMMIT_SHA=${COMMIT_SHA}
+COPY pyproject.toml .
+COPY *.yaml ./
 
-# Clone the repo using ARGs
-RUN git clone ${REPO_URL} /workspace/neural-lam-dev && \
-    cd /workspace/neural-lam-dev && \
-    git checkout ${COMMIT_SHA}
+# Install uv
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+
+ENV PATH="/root/.local/bin:$PATH"
+
+# Install directly into system python
+# https://github.com/astral-sh/uv/issues/8085#issuecomment-2707744397
+RUN uv export | uv pip install --system -r -
+
+#ENTRYPOINT
+#CMD
