@@ -34,7 +34,6 @@ jobs:
         uses: keithweaver/aws-s3-github-action@v1.0.0
         with:
           command: 'cp'
-          #source: 's3://my-bucket/path/${{ matrix.config }}/inference_artifact.zip'
           source: 's3://mlwm-artifacts/inference-artifacts/${{ matrix.config }}.zip'
           destination: 'configurations/${{ matrix.config }}/inference_artifact.zip'
           # Ensure that AWS_SECRET_ACCESS_KEY is set in the repository or organization secrets:
