@@ -19,7 +19,7 @@ jobs:
       matrix:
         config:
           #- gefion1_FakeDINI+FakeIFS+FakeDINI
-          - surface-dummy-model
+          - surface-dummy-model_DINI
     permissions:
       contents: read
       packages: write
