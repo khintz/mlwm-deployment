@@ -59,8 +59,8 @@ jobs:
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: configurations/gefion1_FakeDINI+FakeIFS
-          file: configurations/gefion1_FakeDINI+FakeIFS/Containerfile
+          context: configurations/${{ matrix.config }}
+          file: configurations/${{ matrix.config }}/Containerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
