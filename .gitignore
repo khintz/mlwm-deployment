@@ -1,0 +1,10 @@
+*.pyc
+__pycache__/
+.DS_Store
+*.egg-info/
+uv.lock
+
+training_cli_args.yaml
+.env
+inference_artifact.zip
+inference_artifact/
