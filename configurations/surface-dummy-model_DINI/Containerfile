@@ -9,7 +9,9 @@ COPY entry.sh ./
 # The inference artifact is downloaded from an S3 bucket
 # during the build process and is called inference_artifact.zip
 COPY inference_artifact.zip ./
-RUN unzip inference_artifact.zip
+RUN mkdir -p /workspace/inference_artifact
+# Unzip the inference artifact
+RUN unzip inference_artifact.zip -d /workspace/inference_artifact
 
 # Install uv
 RUN curl -LsSf https://astral.sh/uv/install.sh | sh
