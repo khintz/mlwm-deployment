@@ -3,6 +3,9 @@
 # This script runs the inference container using initial conditions from DINI
 # stored on AWS
 
+# Container application (defuault to podman if not set)
+CONTAINER_APP=${CONTAINER_APP:-podman}
+
 # The script takes only one argument: the analysis time to use for inference,
 # in ISO8601 format (e.g. 2025-11-05T090000Z). If "Z" is omitted, UTC is
 # assumed. An optional second argument can be provided to specify the forecast
@@ -65,17 +68,32 @@ DINI_ZARR_PL="s3://harmonie-zarr/dini/control/${ANALYSIS_TIME}/pressure_levels.z
 # Overwrite input paths to datastore. The container will use these paths instead of those in the datastore config file when creating the inference dataset.
 DATASTORE_INPUT_PATHS="danra_model1_config.danra_sl_state=${DINI_ZARR},danra_model1_config.danra_static=${DINI_ZARR},danra_model1_config.danra_pl_state=${DINI_ZARR_PL},danra_model1_config.danra_forcing=${DINI_ZARR}"
 DATASTORE_RENAME_VARIABLES="${DATASTORE_RENAME_VARIABLES:-}"
+MLWM_DEBUGGER="${MLWM_DEBUGGER:-}"
 TIME_DIMENSIONS="time"
 INFERENCE_WORKDIR="$(pwd)/inference_workdir/"
 
-podman run --rm \
-    --device nvidia.com/gpu=all \
+if [ "${CONTAINER_APP}" = "docker" ] ; then
+    GPU_ARGS=(--gpus all)
+else
+    GPU_ARGS=(--device nvidia.com/gpu=all)
+fi
+
+if [ "${MLWM_DEBUGGER}" = "ipdb" ] ; then
+    DEBUG_ARGS=(-it)
+else
+    DEBUG_ARGS=()
+fi
+
+${CONTAINER_APP} run --rm \
+    "${GPU_ARGS[@]}" \
+    "${DEBUG_ARGS[@]}" \
     --shm-size=32g \
     -v ${INFERENCE_WORKDIR}:/workspace/inference_workdir:Z \
     -v $(pwd)/src:/workspace/src:Z \
     -e DATASTORE_INPUT_PATHS="${DATASTORE_INPUT_PATHS}" \
     -e DATASTORE_RENAME_VARIABLES="${DATASTORE_RENAME_VARIABLES}" \
+    -e MLWM_DEBUGGER="${MLWM_DEBUGGER}" \
     -e TIME_DIMENSIONS="${TIME_DIMENSIONS}" \
     -e ANALYSIS_TIME="${ANALYSIS_TIME}" \
     -e FORECAST_DURATION="${FORECAST_DURATION}" \
-    localhost/anna:latest
+    anna:latest
